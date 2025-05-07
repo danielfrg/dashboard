@@ -23,3 +23,4 @@ go.work.sum
 
 # project
 pb_data
+*_templ.go

@@ -1,4 +1,4 @@
-package api
+package handlers
 
 type ParentRef struct {
 	Name      string `json:"name"`
