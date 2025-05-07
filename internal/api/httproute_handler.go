@@ -41,13 +41,14 @@ func (h *HTTPRouteHandler) ServeRoutes(w http.ResponseWriter, r *http.Request, q
 
 	for _, route := range rawRoutes {
 		routeInfo := HTTPRouteInfo{
-			Name:      route.Name,
-			Namespace: route.Namespace,
+			Name:        route.Name,
+			Namespace:   route.Namespace,
+			Annotations: route.Annotations,
 		}
 
 		if len(route.Spec.Hostnames) > 0 {
 			routeInfo.Hostnames = make([]string, len(route.Spec.Hostnames))
-			for i,hostname := range route.Spec.Hostnames {
+			for i, hostname := range route.Spec.Hostnames {
 				routeInfo.Hostnames[i] = string(hostname)
 			}
 		}

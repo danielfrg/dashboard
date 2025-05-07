@@ -7,10 +7,11 @@ type ParentRef struct {
 }
 
 type HTTPRouteInfo struct {
-	Name       string      `json:"name"`
-	Namespace  string      `json:"namespace"`
-	Hostnames  []string    `json:"hostnames,omitempty"`
-	ParentRefs []ParentRef `json:"parentRefs,omitempty"`
+	Name        string            `json:"name"`
+	Namespace   string            `json:"namespace"`
+	Hostnames   []string          `json:"hostnames,omitempty"`
+	ParentRefs  []ParentRef       `json:"parentRefs,omitempty"`
+	Annotations map[string]string `json:"annotations,omitempty"`
 }
 
 type RoutesResponse struct {
