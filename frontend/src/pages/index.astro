@@ -10,7 +10,6 @@ import Layout from "../layouts/Layout.astro";
 	>
 		<!-- States Container -->
 		<div class="mb-6">
-			<!-- Loading State -->
 			<template x-if="loading">
 				<div class="bg-gray-900 rounded-lg p-6 text-center">
 					<div class="flex justify-center">
@@ -60,9 +59,7 @@ import Layout from "../layouts/Layout.astro";
 			<!-- No Routes Found State -->
 			<template x-if="!loading && !error && routes.length === 0">
 				<div class="bg-gray-900 rounded-lg p-6 text-center">
-					<p class="text-gray-400">
-						No HTTPRoutes found in this namespace.
-					</p>
+					<p class="text-gray-400">No HTTPRoutes found.</p>
 				</div>
 			</template>
 		</div>
@@ -70,9 +67,6 @@ import Layout from "../layouts/Layout.astro";
 		<!-- Routes List -->
 		<template x-if="!loading && !error && routes.length > 0">
 			<div>
-				<!-- Filter/Search option could go here -->
-
-				<!-- Routes Grid - Responsive column layout -->
 				<ul
 					role="list"
 					class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
@@ -83,6 +77,8 @@ import Layout from "../layouts/Layout.astro";
 					>
 						<li
 							class="bg-gray-900 rounded-lg shadow-md transition-all hover:shadow-lg hover:bg-gray-800"
+							x-bind:class="{ 'cursor-pointer': route.hostnames && route.hostnames.length > 0 }"
+							x-on:click="route.hostnames && route.hostnames.length > 0 ? window.open(`https://${route.hostnames[0]}`, '_blank') : null"
 						>
 							<div class="p-4">
 								<!-- Icon and Name -->
@@ -113,12 +109,11 @@ import Layout from "../layouts/Layout.astro";
 										<template
 											x-if="route.hostnames && route.hostnames.length > 0"
 										>
-											<a
-												:href="`https://${route.hostnames[0]}`"
-												target="_blank"
-												rel="noopener noreferrer"
+											<p
 												class="text-sm font-semibold leading-6 text-white hover:underline truncate block"
-												x-text="route.name"></a>
+												x-text="route.name"
+											>
+											</p>
 										</template>
 										<template
 											x-if="!route.hostnames || route.hostnames.length === 0"
@@ -132,7 +127,6 @@ import Layout from "../layouts/Layout.astro";
 									</div>
 								</div>
 
-								<!-- Additional route info could go here -->
 								<div class="text-xs text-gray-400 mt-2">
 									<p
 										class="truncate"
@@ -144,8 +138,6 @@ import Layout from "../layouts/Layout.astro";
 						</li>
 					</template>
 				</ul>
-
-				<!-- Pagination could go here -->
 			</div>
 		</template>
 	</div>
