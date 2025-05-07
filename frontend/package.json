@@ -1,0 +1,17 @@
+{
+  "name": "dashboard-frontend",
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/alpinejs": "^0.4.8",
+    "@tailwindcss/vite": "^4.1.5",
+    "astro": "^5.7.11",
+    "tailwindcss": "^4.1.5"
+  }
+}

@@ -1,0 +1,40 @@
+---
+import "../styles/global.css";
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<script
+			defer
+			src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"
+		></script>
+		<title>Homelab Dashboard</title>
+	</head>
+	<body class="bg-[#031222]">
+		<nav
+			id="header"
+			class="border-b-3 border-dashed border-[#053F76] bg-black"
+		>
+			<div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+				<div class="relative flex h-16 items-center justify-between">
+					<div class="flex items-center">
+						<div class="ml-6">
+							<div class="flex space-x-4">
+								<a
+									href="#"
+									class="bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium"
+									aria-current="page">Services</a
+								>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</nav>
+		<slot />
+	</body>
+</html>

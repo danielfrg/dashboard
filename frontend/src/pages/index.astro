@@ -1,0 +1,186 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout>
+	<div
+		class="max-w-7xl mx-auto p-4 sm:p-6"
+		x-data="routesData"
+		x-init="fetchRoutes()"
+	>
+		<!-- States Container -->
+		<div class="mb-6">
+			<!-- Loading State -->
+			<template x-if="loading">
+				<div class="bg-gray-900 rounded-lg p-6 text-center">
+					<div class="flex justify-center">
+						<svg
+							class="animate-spin h-8 w-8 text-blue-500"
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+						>
+							<circle
+								class="opacity-25"
+								cx="12"
+								cy="12"
+								r="10"
+								stroke="currentColor"
+								stroke-width="4"></circle>
+							<path
+								class="opacity-75"
+								fill="currentColor"
+								d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+							></path>
+						</svg>
+					</div>
+					<p class="text-gray-400 mt-4">Loading routes...</p>
+				</div>
+			</template>
+
+			<!-- Error State -->
+			<template x-if="error">
+				<div
+					class="bg-red-900 border border-red-700 rounded-lg p-6 text-center"
+				>
+					<p
+						class="text-red-300"
+						x-text="`Error loading routes: ${error}`"
+					>
+					</p>
+					<button
+						@click="fetchRoutes()"
+						class="mt-4 px-4 py-2 bg-red-700 hover:bg-red-600 text-white rounded-md"
+					>
+						Retry
+					</button>
+				</div>
+			</template>
+
+			<!-- No Routes Found State -->
+			<template x-if="!loading && !error && routes.length === 0">
+				<div class="bg-gray-900 rounded-lg p-6 text-center">
+					<p class="text-gray-400">
+						No HTTPRoutes found in this namespace.
+					</p>
+				</div>
+			</template>
+		</div>
+
+		<!-- Routes List -->
+		<template x-if="!loading && !error && routes.length > 0">
+			<div>
+				<!-- Filter/Search option could go here -->
+
+				<!-- Routes Grid - Responsive column layout -->
+				<ul
+					role="list"
+					class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
+				>
+					<template
+						x-for="route in routes"
+						:key="route.name + '-' + route.namespace"
+					>
+						<li
+							class="bg-gray-900 rounded-lg shadow-md transition-all hover:shadow-lg hover:bg-gray-800"
+						>
+							<div class="p-4">
+								<!-- Icon and Name -->
+								<div class="flex items-center mb-3">
+									<div
+										x-bind:class="route.annotations && route.annotations['selfh.st/icons'] ?
+											'h-10 w-10 flex-none rounded-full flex items-center justify-center mr-3' :
+											'h-10 w-10 flex-none rounded-full bg-gray-800 flex items-center justify-center mr-3'"
+									>
+										<template
+											x-if="route.annotations && route.annotations['selfh.st/icons']"
+										>
+											<img
+												:src="`https://cdn.jsdelivr.net/gh/selfhst/icons/webp/${route.annotations['selfh.st/icons']}.webp`"
+												:alt="route.name"
+												class="h-8 w-8 object-contain"
+												onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+											/>
+										</template>
+										<span
+											class="text-lg font-bold text-blue-400"
+											x-bind:style="route.annotations && route.annotations['selfh.st/icons'] ? 'display: none;' : ''"
+											>:)</span
+										>
+									</div>
+
+									<div class="min-w-0 flex-auto">
+										<template
+											x-if="route.hostnames && route.hostnames.length > 0"
+										>
+											<a
+												:href="`https://${route.hostnames[0]}`"
+												target="_blank"
+												rel="noopener noreferrer"
+												class="text-sm font-semibold leading-6 text-white hover:underline truncate block"
+												x-text="route.name"></a>
+										</template>
+										<template
+											x-if="!route.hostnames || route.hostnames.length === 0"
+										>
+											<p
+												class="text-sm font-semibold leading-6 text-white truncate"
+												x-text="route.name"
+											>
+											</p>
+										</template>
+									</div>
+								</div>
+
+								<!-- Additional route info could go here -->
+								<div class="text-xs text-gray-400 mt-2">
+									<p
+										class="truncate"
+										x-text="`Namespace: ${route.namespace || 'Default'}`"
+									>
+									</p>
+								</div>
+							</div>
+						</li>
+					</template>
+				</ul>
+
+				<!-- Pagination could go here -->
+			</div>
+		</template>
+	</div>
+
+	<script>
+		document.addEventListener("alpine:init", () => {
+			Alpine.data("routesData", () => ({
+				routes: [],
+				loading: true,
+				error: null,
+				async fetchRoutes() {
+					this.loading = true;
+					this.error = null;
+					try {
+						const response = await fetch(
+							"http://localhost:8080/api/routes",
+						);
+						if (!response.ok) {
+							throw new Error(
+								`HTTP error! status: ${response.status}`,
+							);
+						}
+						const data = await response.json();
+						// Assuming the API returns { count: number, routes: array }
+						this.routes = data.routes || []; // Ensure routes is always an array
+					} catch (err) {
+						console.error("Failed to fetch routes:", err);
+						// Fix TypeScript error by properly typing the error
+						this.error =
+							err instanceof Error ? err.message : String(err);
+					} finally {
+						this.loading = false;
+					}
+				},
+			}));
+		});
+	</script>
+</Layout>
